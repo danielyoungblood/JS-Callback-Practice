@@ -6,54 +6,56 @@ function move(element) {
     element.style.bottom = bottom + "px";
   }
 
-  function moveWithArrowKeys(left, bottom, onDirectionChange) {
-    let direction = null;
+  //this will handle moving the character with the character keys
+  function moveWithArrowKeys(left, bottom) {
     let x = left;
     let y = bottom;
-
     element.style.left = x + "px";
     element.style.bottom = y + "px";
 
-    function moveCharacter() {
+    //took code from the moveCharacter function and used it directly in setInterval function, this is referred to as inline function
+    setInterval(function () {
+      let direction = null;
       if (direction === "west") {
-        x -= 1;
+        x = x - 1;
       }
       if (direction === "north") {
-        y += 1;
+        y = y + 1;
       }
       if (direction === "east") {
-        x += 1;
+        x = x + 1;
       }
       if (direction === "south") {
-        y -= 1;
+        y = y - 1;
       }
-      element.style.left = x + "px";
-      element.style.bottom = y + "px";
-    }
+    }, 1);
 
-    setInterval(moveCharacter, 1);
+    //we are adding an inline function to handle the event when either the left arrow key, right arrow key, up arrow key, or down arrow key is pressed
+    //in other words we are adding event listener for the "keydown" event
+    //this is what changed direction of the character when user presses down on the arrow keys
+    document.addEventListener("keydown", function (keyBoardEventParameter) {
+      if (keyBoardEventParameter.repeat) return; //this line will imediately exit the function if the same arrow key is pressed twice
 
-    document.addEventListener("keydown", function (e) {
-      if (e.repeat) return;
-
-      if (e.key === "ArrowLeft") {
+      if (keyBoardEventParameter.key === "ArrowLeft") {
         direction = "west";
       }
-      if (e.key === "ArrowUp") {
+
+      if (keyBoardEventParameter.key === "ArrowUp") {
         direction = "north";
       }
-      if (e.key === "ArrowRight") {
+
+      if (keyBoardEventParameter.key === "ArrowRight") {
         direction = "east";
       }
-      if (e.key === "ArrowDown") {
+
+      if (keyBoardEventParameter.key === "ArrowDown") {
         direction = "south";
       }
-      onDirectionChange(direction);
     });
 
-    document.addEventListener("keyup", function (e) {
+    //adding one more event listener to stop the character when the user releases a key
+    document.addEventListener("keyup", function (keyBoardEventParameter) {
       direction = null;
-      onDirectionChange(direction);
     });
   }
 
